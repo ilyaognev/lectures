@@ -16,4 +16,4 @@
 
 ## Контакты
 
-* Романов Алексей (mail:aromanov@inno.tech, tg: @romanowalex)
+* Романов Алексей (mail: romanowalex@mail.ru, tg: @romanowalex)
