@@ -1,0 +1,16 @@
+.DS_Store
+.idea/
+.gradle/
+logs/
+*.log
+*.iml
+*.iws
+*.ipr
+.vagrant/
+.vault_pass
+.terraform/
+.terraform.lock.hcl
+*.auto.tfvars
+*.lock.info
+*.state.backup
+digital_ocean.ini
