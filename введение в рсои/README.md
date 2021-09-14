@@ -206,7 +206,7 @@
 * Подсистема выполнения бизнес-операций.
 * Подсистема работы с базой данных.
 
-## Материалы
+## Литература
 
 1. [Простым языком о микросервисной архитектуре для начинающих](https://mcs.mail.ru/blog/prostym-jazykom-o-mikroservisnoj-arhitekture)
 1. [https://mcs.mail.ru/blog/mikroservisy-skaly-i-gigantskie-prilozheniya](Микросервисы, скалы и гигантские приложения)

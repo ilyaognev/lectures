@@ -142,7 +142,7 @@ JSON является широко распространённым и попу�
 ## Примеры
 [Serialization Protocols](https://github.com/Romanow/serialization-protocols)
 
-## Материалы
+## Литература
 
 1. [google/gson](https://github.com/google/gson)
 1. [Некоторые приемы YAML](https://habr.com/ru/post/270097/)
