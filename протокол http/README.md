@@ -675,7 +675,7 @@ blocking) — клиенту не придётся простаивать, ож�
 
 1. [Протокол HTTP](https://ru.wikipedia.org/wiki/HTTP)
 1. [Внутренние механизмы ТСР, влияющие на скорость загрузки: часть 1](https://habr.com/ru/company/webo/blog/326258/)
-1. [https://www.restapitutorial.com/httpstatuscodes.html](https://www.restapitutorial.com/httpstatuscodes.html)
+1. [HTTP Status Codes](https://www.restapitutorial.com/httpstatuscodes.html)
 1. [Согласование контента](https://developer.mozilla.org/ru/docs/Web/HTTP/Content_negotiation)
 1. [Websocket](https://learn.javascript.ru/websocket)
 1. [HTTP-кэширование](https://developer.mozilla.org/ru/docs/Web/HTTP/Caching)
