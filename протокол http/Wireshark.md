@@ -50,19 +50,38 @@ Wireshark умеет собирать сообщения в общее сооб�
 
 ### Расшифровка SSL-трафика
 
-Для расшифровки требуется секретный ключ сервера. Добавить `properties` -> `protocols` -> `TLS` -> `RSA key list`.
+Для расшифровки требуется секретный ключ сервера. Для примера возьмем
+проект [restful](https://github.com/Romanow/restful) и запустим его с профилем `local`, `tomcat`.
 
-* ip: 127.0.0.1
-* port: 8443
-* protocol: http
-* keyfile, password
+```shell
+docker compose up -d
+./gradlew clean build bootRun --args='--spring.profiles.active=local,tomcat'
+```
+
+В этой конфигурации основной chipper `TLS_RSA_WITH_AES_256_CBC_SHA`, который для расшифровки требует только ключ
+сервера.
+
+Добавить `properties` -> `protocols` -> `TLS` -> `RSA key list` с настройками:
+
+* ip: `127.0.0.1`;
+* port: `8443`;
+* protocol: `http`;
+* keyfile: `resources/certificate.p12`;
+* password: `tomcat`.
 
 Так же имеет смысл включить SSL debug file.
+
+![wireshark ssl](images/wireshark.png)
 
 В случае ошибки "ssl_restore_master_key can't find pre-master secret by Encrypted pre-master secret", значит при обмене
 ключами используется алгоритм Диффи-Хеллмана, которому для расшифровки требуется не только ключ сервера, но и сессионные
 ключи из браузера.
-[unable to decrypt HTTPS traffic with Wireshark](https://osqa-ask.wireshark.org/questions/46959/unable-to-decrypt-https-traffic-with-wireshark)
+
+Для этого нужно через переменную среды ` SSLKEYLOGFILE` указать путь к файлу, куда будут записываться pre-master ключи.
+
+```shell
+SSLKEYLOGFILE=/tmp/.ssl.log curl https://localhost:8443/api/v1/state -k
+```
 
 ## Ссылки
 
@@ -71,3 +90,5 @@ Wireshark умеет собирать сообщения в общее сооб�
 1. [Capture Filters](https://wiki.wireshark.org/CaptureFilters)
 1. [HTTP/HTTPS Analysis Using Wireshark](https://medium.com/devops-world/http-https-analysis-using-wireshark-cbe07c23520)
 1. [How to Decrypt SSL with Wireshark – HTTPS Decryption Guide](https://www.comparitech.com/net-admin/decrypt-ssl-with-wireshark/)
+1. [Reading sniffed SSL/TLS traffic from curl with Wireshark](https://davidhamann.de/2019/08/06/sniffing-ssl-traffic-with-curl-wireshark/)
+1. [Unable to decrypt HTTPS traffic with Wireshark](https://osqa-ask.wireshark.org/questions/46959/unable-to-decrypt-https-traffic-with-wireshark)
