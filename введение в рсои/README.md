@@ -209,7 +209,7 @@
 ## Литература
 
 1. [Простым языком о микросервисной архитектуре для начинающих](https://mcs.mail.ru/blog/prostym-jazykom-o-mikroservisnoj-arhitekture)
-1. [https://mcs.mail.ru/blog/mikroservisy-skaly-i-gigantskie-prilozheniya](Микросервисы, скалы и гигантские приложения)
+1. [Микросервисы, скалы и гигантские приложения](https://mcs.mail.ru/blog/mikroservisy-skaly-i-gigantskie-prilozheniya)
 1. [Просто о микросервисах](https://habr.com/ru/company/raiffeisenbank/blog/346380/)
 1. [Архитектура микросервисов](https://habr.com/ru/company/mailru/blog/320962/) 
 1. [Микросервисы или монолит: ищем решение](https://habr.com/ru/post/459810/)
