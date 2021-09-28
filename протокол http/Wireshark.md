@@ -92,3 +92,4 @@ SSLKEYLOGFILE=/tmp/.ssl.log curl https://localhost:8443/api/v1/state -k
 1. [How to Decrypt SSL with Wireshark – HTTPS Decryption Guide](https://www.comparitech.com/net-admin/decrypt-ssl-with-wireshark/)
 1. [Reading sniffed SSL/TLS traffic from curl with Wireshark](https://davidhamann.de/2019/08/06/sniffing-ssl-traffic-with-curl-wireshark/)
 1. [Unable to decrypt HTTPS traffic with Wireshark](https://osqa-ask.wireshark.org/questions/46959/unable-to-decrypt-https-traffic-with-wireshark)
+1. [Анализ SSL/TLS трафика в Wireshark](https://habr.com/ru/company/billing/blog/261301/)
