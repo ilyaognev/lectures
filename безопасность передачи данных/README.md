@@ -15,6 +15,8 @@
 раз больше. Передаваемые заголовки могут варьироваться, что делает сложнее задачу выявления атаки. Использование HTTPS
 так же усложняет задачу, т.к. для выполнения запроса его нужно сначала расшифровать, а на это так же тратятся ресурсы.
 
+![HTTP flood](images/http_flood.png)
+
 Защита: установить перед web-сервером nginx для кэширования запросов.
 
 #### UDP-флуд
@@ -732,3 +734,6 @@ HS256(base64UrlEncode(первая часть) + "." + base64UrlEncode(втор�
 1. [OWASP Top Ten Security Risks](https://owasp.org/www-project-top-ten/)
 1. [OverTheWire: Natas](https://overthewire.org/wargames/natas/)
 1. [Computer Security Student](https://computersecuritystudent.com/cgi-bin/CSS/process_request_v3.pl?HID=688b0913be93a4d95daed400990c4745&TYPE=SUB)
+1. [Иллюстрированное руководство по OAuth и OpenID Connect](https://habr.com/ru/company/flant/blog/475942/)
+1. [OpenID Connect 1.0 На Пальцах](https://habr.com/ru/post/422765/)
+1. [Платформа удостоверений Майкрософт и протокол OpenID Connect](https://docs.microsoft.com/ru-ru/azure/active-directory/develop/v2-protocols-oidc)
