@@ -9,29 +9,27 @@
 
 Фильтр захвата пакетов. Отображается только трафик, удовлетворяющий введенным условиям. Например:
 
-* host 192.168.1.5 – исходящий или входящий трафик с 192.168.1.5;
-* net 192.168.1.1/16 – исходящий или входящий трафик в подсеть /16;
-* src/dst net 192.168.0.0/24 – явно указать входящий или исходящий трафик;
-* tcp port http – перехват только HTTP;
-* port 53 – DNS;
-* host www.example.com and not (port 443 or port 25) – перехват только пакетов, идущий к/от www.example.com и не на
+* `host 192.168.1.5` – исходящий или входящий трафик с 192.168.1.5;
+* `net 192.168.1.1/16` – исходящий или входящий трафик в подсеть /16;
+* `src/dst net 192.168.0.0/24`– явно указать входящий или исходящий трафик;
+* `tcp port http` – перехват только HTTP;
+* `port 53` – DNS;
+* `host www.example.com and not (port 443 or port 25)` – перехват только пакетов, идущий к/от www.example.com и не на
   портах HTTPS или SMTP;
-* tcp portrange 8080-8090 – перехват по диапазону портов.
+* `tcp portrange 8080-8090` – перехват по диапазону портов.
 
 ### Display filters
 
-* tcp.dstport == 80 && http – запрос HTTP;
-* tcp.port in {80 8080} – запросы на порты 80 или 8080 (входящие или исходящие);
-* ip.dst == 192.168.31.1 && arp – arp запрос к 192.168.31.1;
-* Протоколы: arp, http, icmp – фильтрация по протоколам arp, http, icmp;
-* icmp – ICMP траффик;
-* http.host == "example.com" – запрос к example.com;
-* http.host contains ".com" – запросы на серверам .com;
-* http.request.version ~ "HTTP/2.*" – протокол сообщения HTTP/2 (можно просто http2);
-* http.content_type contains "text/xml" – content-type text/xml;
-* lower(http.server) contains "apache" – имя сервера регистронезависимо apache;
-* http.request.method in {"HEAD" "GET"} – GET / HEAD HTTP;
-* http.request.uri matches "/info$" – запросы, оканчивающиеся на /info.
+* `tcp.dstport == 80 && http` – запрос HTTP;
+* `tcp.port in {80 8080}` – запросы на порты 80 или 8080 (входящие или исходящие);
+* `ip.dst == 192.168.31.1 && arp` – arp запрос к 192.168.31.1;
+* `http.host == "example.com"` – запрос к example.com;
+* `http.host contains ".com"` – запросы на серверам .com;
+* `arp`, `icmp`, http`, `http2` – ARP протокол, ICMP, HTTP/1.1, HTTP/2;
+* `http.content_type contains "text/xml"` – content-type text/xml;
+* `lower(http.server) contains "apache"` – имя сервера регистронезависимо apache;
+* `http.request.method in {"GET", "HEAD"}` – GET / HEAD HTTP methods;
+* `http.request.uri matches "/api/v1/server$"` – запросы, оканчивающиеся на /info.
 
 ### Follow stream
 
