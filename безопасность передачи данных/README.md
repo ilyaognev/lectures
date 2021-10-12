@@ -632,7 +632,7 @@ curl --location --request POST 'https://api.dropboxapi.com/2/users/get_account' 
 
 ### OpenID Connect
 
-OpenID Connect фактически представляет из себя расширение протокола OAuth 2. Он добавляет слой аутентификации поверх
+OpenID Connect фактически представляет собой расширение протокола OAuth 2. Он добавляет слой аутентификации поверх
 слоя авторизации. На деле это выглядит как дополнительное поле id_token, содержащее базовую информацию о профиле,
 приходящее вместе с `access_token`. Параметр `id_token` представляет простой способ, чтобы убедиться, что данные,
 полученные клиентом, не были изменены. Параметр подписывается сервером, используя клиентский ключ, который был ранее
@@ -677,22 +677,70 @@ HS256(base64UrlEncode(первая часть) + "." + base64UrlEncode(втор�
 #### Discovery
 
 Спецификация OpenID Connect предоставляет некоторый endpoint, служащий для динамической настройки авторизации – на
-запрос на некоторый uri /openid-configuration в ответ приходит json, содержащий в себе сведения о endpoint’ах получения
+запрос на некоторый uri `https://<openid-provider>/.well-known/openid-configuration` в ответ приходит json, содержащий в себе сведения о endpoint’ах получения
 кода, токена и прочих параметров, участвующих в авторизации. Например:
 
-```json
+```shell
+curl https://accounts.google.com/.well-known/openid-configuration -s | jq
 {
-  "authorization_endpoint": "https://server.example.com/connect/authorize",
-  "issuer": "https://server.example.com",
-  "token_endpoint": "https://server.example.com/connect/token",
-  "token_endpoint_auth_types_supported": [
-    "client_secret_basic",
-    "private_key_jwt"
+  "issuer": "https://accounts.google.com",
+  "authorization_endpoint": "https://accounts.google.com/o/oauth2/v2/auth",
+  "device_authorization_endpoint": "https://oauth2.googleapis.com/device/code",
+  "token_endpoint": "https://oauth2.googleapis.com/token",
+  "userinfo_endpoint": "https://openidconnect.googleapis.com/v1/userinfo",
+  "revocation_endpoint": "https://oauth2.googleapis.com/revoke",
+  "jwks_uri": "https://www.googleapis.com/oauth2/v3/certs",
+  "response_types_supported": [
+    "code",
+    "token",
+    "id_token",
+    "code token",
+    "code id_token",
+    "token id_token",
+    "code token id_token",
+    "none"
   ],
-  "userinfo_endpoint": "https://server.example.com/connect/user",
-  "check_id_endpoint": "https://server.example.com/connect/check_id",
-  "registration_endpoint": "https://server.example.com/connect/register"
+  "subject_types_supported": [
+    "public"
+  ],
+  "id_token_signing_alg_values_supported": [
+    "RS256"
+  ],
+  "scopes_supported": [
+    "openid",
+    "email",
+    "profile"
+  ],
+  "token_endpoint_auth_methods_supported": [
+    "client_secret_post",
+    "client_secret_basic"
+  ],
+  "claims_supported": [
+    "aud",
+    "email",
+    "email_verified",
+    "exp",
+    "family_name",
+    "given_name",
+    "iat",
+    "iss",
+    "loale",
+    "name",
+    "picture",
+    "sub"
+  ],
+  "code_challenge_methods_supported": [
+    "plain",
+    "S256"
+  ],
+  "grant_types_supported": [
+    "authorization_code",
+    "refresh_token",
+    "urn:ietf:params:oauth:grant-type:device_code",
+    "urn:ietf:params:oauth:grant-type:jwt-bearer"
+  ]
 }
+
 ```
 
 #### Dynamic Register
