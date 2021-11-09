@@ -305,6 +305,8 @@ Hypertext Application Language), описывающийся в Content-Type ка
 1. [Подходы к проектированию RESTful API](https://habr.com/ru/company/dataart/blog/277419/)
 1. [Изучаем REST: Руководство по созданию RESTful-сервиса](https://www.restapitutorial.ru/)
 1. [REST: простым языком](https://medium.com/@andr.ivas12/rest-%D0%BF%D1%80%D0%BE%D1%81%D1%82%D1%8B%D0%BC-%D1%8F%D0%B7%D1%8B%D0%BA%D0%BE%D0%BC-90a0bca0bc78)
+1. [Дизайн REST API для высокопроизводительных систем](https://habr.com/ru/post/323010/)
+1. [https://habr.com/ru/post/559128/](https://habr.com/ru/post/559128/)
 1. [What Is A Rest Api](https://www.testmanagement.com/blog/2020/06/what-is-a-rest-api)
 1. [What is REST](https://restfulapi.net/)
 1. [HATEOAS Driven REST APIs](https://restfulapi.net/hateoas/)

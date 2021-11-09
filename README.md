@@ -21,6 +21,7 @@
 ## Домашние задания
 
 1. [CI/CD](https://github.com/bmstu-rsoi/lab1-template)
+1. [Microservices](https://github.com/bmstu-rsoi/lab2-template)
 
 ## Контакты
 
