@@ -15,22 +15,24 @@ services:
       - 5432:5432
 
   restful:
-    image: romanowalex/restful:v1.0-nginx
+    image: romanowalex/restful:v1.2-nginx
     container_name: restful
     environment:
-      SPRING_PROFILES_ACTIVE: local
+      SPRING_PROFILES_ACTIVE: nginx
     ports:
-      - 8081:8080
+      - 8180:8080
     depends_on:
       - postgres
 
   nginx:
-    image: nginx:v1.21
+    image: nginx:1.21
     container_name: nginx
     ports:
       - 8080:8080
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - restful
 
 volumes:
   db-data:
