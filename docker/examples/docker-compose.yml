@@ -1,0 +1,21 @@
+version: "3.7"
+services:
+  simple-frontend:
+    build: ./simple-frontend
+    image: romanowalex/simple-frontend:v1.0
+    container_name: simple-frontend
+    restart: on-failure
+    ports:
+      - "3000:80"
+    depends_on:
+      - simple-backend
+
+  simple-backend:
+    build: ./simple-backend
+    image: romanowalex/simple-backend:v1.0
+    container_name: simple-backend
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      - postgres
+      - dictionary-service

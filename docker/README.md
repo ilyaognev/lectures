@@ -112,7 +112,7 @@ Docker использует технологию ядра Linux cgroups, кот�
 Образ использует AuFS (advanced multi-layered unification filesystem - вспомогательная файловая система, образующая
 каскадно-объединённое монтирование для файловых систем Linux) для прозрачного монтирования файловых систем.
 
-![layers](images/layers.png)
+![layers](images/image_layers.png)
 
 В папке `/var/lib/docker/overlay2` слови представлены папками, в папке l хранятся коротки ссылки на имена для
 использования в команде mount. В каждом образе хранится (кроме базового, там только link и diff):
@@ -424,6 +424,48 @@ $ docker inspect -f "{{json .NetworkSettings.Networks }}" store-service | jq
     ...
   }
 }
+```
+
+## Пример
+
+```shell
+$ cd examples/simple-backend
+
+$ ./gradlew clean build
+
+$ docker build . -t simple-backend:v1.0
+
+$ docker network create --driver bridge simple-app-network
+
+$ docker run -d \
+    --name simple-backend \
+    --network simple-app-network \
+    -e SPRING_PROFILES_ACTIVE=docker \
+    simple-backend:v1.0
+
+$ cd ../frontend
+
+$ docker build . -t simple-frontend:v1.0
+    
+$ docker run -d \
+    --name simple-frontend \
+    --network simple-app-network \
+    -p 3000:80 \
+    simple-frontend:v1.0 
+```
+
+Открыть в браузере `http://localhost:3000`
+
+[Docker Compose](examples/docker-compose.yml)
+
+```shell
+$ docker compose build
+
+$ docker compose up
+[+] Running 3/3                                                                                                                                                                                
+ ⠿ Network examples_default   Created                                                                                                                                                     0.3s
+ ⠿ Container simple-backend   Started                                                                                                                                                     1.1s
+ ⠿ Container simple-frontend  Started
 ```
 
 ## Литература
