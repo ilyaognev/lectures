@@ -474,7 +474,8 @@ $ docker compose up
 
 1. [Что такое Docker и как его использовать в разработке](https://eternalhost.net/blog/razrabotka/chto-takoe-docker)
 2. [Различия между Docker, containerd, CRI-O и runc](https://habr.com/ru/company/domclick/blog/566224/)
-6. [Как устроен процесс создания docker-контейнера (от docker run до runc)](https://habr.com/ru/company/otus/blog/511414/)
-3. [Best practices for writing Dockerfiles](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
-4. [20 лучших практик по работе с Dockerfile](https://habr.com/ru/company/domclick/blog/546922/)
-5. [Docker Bridge Networking Deep Dive](https://medium.com/@xiaopeng163/docker-bridge-networking-deep-dive-3e2e0549e8a0)
+3. [Как устроен процесс создания docker-контейнера (от docker run до runc)](https://habr.com/ru/company/otus/blog/511414/)
+4. [Best practices for writing Dockerfiles](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
+5. [20 лучших практик по работе с Dockerfile](https://habr.com/ru/company/domclick/blog/546922/)
+6. [Docker Bridge Networking Deep Dive](https://medium.com/@xiaopeng163/docker-bridge-networking-deep-dive-3e2e0549e8a0)
+7. [From inside of a Docker container, how do I connect to the localhost of the machine?](https://stackoverflow.com/a/24326540/5649869)
