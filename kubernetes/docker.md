@@ -1,8 +1,8 @@
 # Docker
 
 Docker - это средство виртуализации, одно из назначений которого виртуализация рабочих сред на серверах. Также он
-предоставляет универсальный способ доставки приложений на машины (локальный компьютер или удаленные сервера)
-и их запуска в изолированном окружении.
+[предоставляет универсальный способ доставки приложений на машины (локальный компьютер или удаленные сервера)
+]()и их запуска в изолированном окружении.
 
 Основные понятия:
 
@@ -93,14 +93,28 @@ Docker использует технологию ядра Linux cgroups, кот�
 
 ### CRI-O, containerd, runc
 
-![Docker Contaierd RUNC](images/docker_containerd_runc.png)
-
 ![Containers](images/containers_interfaces.png)
 
-* `Container Runtime Interface` (`CRI`) определяет API между Kubernetes и Container Runtime (средой выполнения контейнеров).
+* `Container Runtime Interface` (`CRI`) — это API, который Kubernetes использует для управления различными Container
+  Runtime, создающими и управляющими контейнерами. CRI упрощает для Kubernetes использование различных Container
+  Runtime. Вместо того, чтобы включать в Kubernetes поддержку каждой из них, используется стандарт CRI. При этом задача
+  управления контейнерами полностью ложится на Container Runtime.
 * `containerd` – Linux Daemon, который управляет контейнерами и запускает их. Он загружает образы из репозитория,
   управляет хранилищем и сетью, а также контролирует работу контейнеров.
 * `runc` – низкоуровневая среда выполнения контейнеров, которая создает и запускает контейнеры.
+
+В Kubernetes kubelet для работы с container runtime использует Container Runtime Interface, при этом весь код
+взаимодействия с контейнерами выполняется через CRI. Docker не поддерживает CRI напрямую, поэтому kubelet включает
+компонент под названием dockershim, который транслирует команды из CRI в docker.
+
+Начиная с версии 1.22 Kubernetes отказываются от поддержки dockershim, соответственно, Docker и будет работать только с
+Container Runtime, поддерживающими Container Runtime Interface (CRI) — containerd или CRI-O.
+
+Но это не означает, что Kubernetes не сможет запускать контейнеры из Docker—образов. И containerd, и CRI-O могут
+запускать образы в формате Docker (фактически в формате OCI), они просто делают это без использования команды docker и
+Docker Daemon.
+
+![Kubernetes Docker deprecation](images/k8s_docker_deprecation.png)
 
 ### Структура образа
 
@@ -474,8 +488,9 @@ $ docker compose up
 
 1. [Что такое Docker и как его использовать в разработке](https://eternalhost.net/blog/razrabotka/chto-takoe-docker)
 2. [Различия между Docker, containerd, CRI-O и runc](https://habr.com/ru/company/domclick/blog/566224/)
-3. [Как устроен процесс создания docker-контейнера (от docker run до runc)](https://habr.com/ru/company/otus/blog/511414/)
-4. [Best practices for writing Dockerfiles](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
-5. [20 лучших практик по работе с Dockerfile](https://habr.com/ru/company/domclick/blog/546922/)
-6. [Docker Bridge Networking Deep Dive](https://medium.com/@xiaopeng163/docker-bridge-networking-deep-dive-3e2e0549e8a0)
-7. [From inside of a Docker container, how do I connect to the localhost of the machine?](https://stackoverflow.com/a/24326540/5649869)
+3. [Docker is deprecated — и как теперь быть?](https://habr.com/ru/company/southbridge/blog/531820/)
+4. [Как устроен процесс создания docker-контейнера (от docker run до runc)](https://habr.com/ru/company/otus/blog/511414/)
+5. [Best practices for writing Dockerfiles](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
+6. [20 лучших практик по работе с Dockerfile](https://habr.com/ru/company/domclick/blog/546922/)
+7. [Docker Bridge Networking Deep Dive](https://medium.com/@xiaopeng163/docker-bridge-networking-deep-dive-3e2e0549e8a0)
+8. [From inside of a Docker container, how do I connect to the localhost of the machine?](https://stackoverflow.com/a/24326540/5649869)
