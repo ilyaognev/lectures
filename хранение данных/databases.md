@@ -484,3 +484,4 @@ Master сервере и появлением этих изменений на �
 
 1. [Уровни изолированности транзакций для самых маленьких](https://habr.com/ru/post/469415/)
 2. [Сага о кластере. Все, что вы хотели знать про горизонтальное масштабирование в Postgres'е](https://habr.com/ru/company/oleg-bunin/blog/312494/)
+3. [Understanding Database Sharding](https://www.digitalocean.com/community/tutorials/understanding-database-sharding)

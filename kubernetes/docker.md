@@ -381,7 +381,7 @@ $ docker volume rm data_volume
 * `bridge` – сеть типа мост для взаимодействия между контейнерами.
     * По-умолчанию, docker создает дефолтную bridge сеть между всеми контейнерами, но она не предоставляет резолв DNS,
       соответственно, общение между контейнерами требуется выполнять с помощью ip-адресов (--link flag deprecated).
-    * Если создается user-defined сеть, то внутри можно обращаться по имени контейнера.
+    * Если создается user-defined сеть, то внутри можно обращаться по имени контейнера (DNS resolution).
 * `host` – монтируется на сеть host-машины, порты внутри контейнера аллоцируются сразу на host машине. Работает только
   на Linux и не поддерживается Docker for Desktop for Mac, Docker Desktop for Windows, Docker EE for Windows Server.
 * `macvlan` – docker host принимает запросы на несколько MAC-адресов по своему ip-адресу и направляют эти запросы в
@@ -442,32 +442,165 @@ $ docker inspect -f "{{json .NetworkSettings.Networks }}" store-service | jq
 }
 ```
 
+## Docker Compose
+
+Docker Compose — это инструментальное средство, входящее в состав Docker. Оно предназначено для решения задач, связанных
+с развёртыванием проектов. Технология Docker Compose, позволяет, с помощью одной команды, запускать множество сервисов.
+
+Docker применяется для управления отдельными контейнерами (сервисами), из которых состоит приложение.
+
+Docker Compose используется для одновременного управления несколькими контейнерами, входящими в состав приложения. Этот
+инструмент предлагает те же возможности, что и Docker, но позволяет работать с более сложными приложениями.
+
+Docker Compose по умолчанию создает bridge network между контейнерами, соответственно docker поднимает DNS resolve и
+контейнеры могут общаться друг к другу по имени.
+
+```shell
+# сборка docker образов (если прописан блок build)
+$ docker compose build
+
+# публикация docker в Container Registry (в имени образа прописывается namespace)
+$ docker compose push
+
+# запуск всех образов
+$ docker compose up
+[+] Running 2/2
+ ⠿ Container simple-backend   Started                                                                                                                                                     1.2s
+ ⠿ Container simple-frontend  Started 
+
+# остановка, старт и рестарт сервисов
+$ docker compose start/stop/restart
+
+# остановка всех сервисов и удаление volume
+$ docker compose down --volumes
+[+] Running 3/3
+ ⠿ Container simple-frontend  Removed                                                                                                                                                     0.2s
+ ⠿ Container simple-backend   Removed                                                                                                                                                     0.3s
+ ⠿ Network examples_default   Removed 
+
+# просмотр какой порт проброше наружу для порта 80 внутри контейнера
+$ docker compose port simple-frontend 80
+0.0.0.0:3000
+```
+
+Структура Docker Compose:
+
+```yaml
+version: "3.7"
+services:
+  # описываем сервисы
+  postgres:
+    # имя образа в Registry (по-умолчанию, docker hub)
+    image: library/postgres:13
+    # имя контейнера
+    container_name: postgres
+    # если контейнер завершился с ошибкой, то перезапустить
+    restart: on-failure
+    # runtime переменные среды 
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: postgres
+    volumes:
+      # относительный путь для init-скриптов
+      - ./postgres/:/docker-entrypoint-initdb.d/
+      # ссылка на volume
+      - db-data:/var/lib/postgresql/data
+    ports:
+      # маппинг портов
+      - "5432:5432"
+    networks:
+      # подключенные сети
+      - database-network
+
+  simple-backend:
+    # путь для сборки контейнера
+    build:
+      # директория для сборки
+      context: ./simple-backend
+      # имя dockerfile
+      dockerfile: Dockerfile
+    image: romanowalex/simple-backend:v1.0
+    container_name: simple-backend
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      # depends_on только задает порядок запуска, но не ожидает успешного старта
+      # если требуется дождаться успешного старта контейнера, то нужно использовать обходные пути https://docs.docker.com/compose/startup-order/
+      - postgres
+    networks:
+      - database-network
+      - frontend-network
+
+  simple-frontend:
+    build: ./simple-frontend
+    image: romanowalex/simple-frontend:v1.0
+    container_name: simple-frontend
+    restart: on-failure
+    ports:
+      - "3000:80"
+    depends_on:
+      - simple-backend
+    networks:
+      - frontend-network
+
+# описание сетей
+networks:
+  frontend-network:
+    # имя сети (по-умолчанию docker compose создает имя <path-name>_<network-name>)
+    name: frontend-network
+    # используемый драйвер
+    driver: bridge
+  database-network:
+    name: database-network
+    driver: bridge
+
+# описание volumes
+volumes:
+  db-data:
+```
+
 ## Пример
 
 ```shell
-$ cd examples/simple-backend
+$ cd examples/
+
+$ docker volume create postgres-data
+
+$ docker network create --driver bridge common-network
+
+$ docker run -d \
+      --name postgres \
+      -e POSTGRES_USER=postgres \
+      -e POSTGRES_PASSWORD=postgres \
+      -e POSTGRES_DB=postgres \
+      -p 5432:5432 \
+      --network common-network \
+      --volume "$(pwd)"/postgres/:/docker-entrypoint-initdb.d/ \
+      --volume postgres-data:/var/lib/postgresql/data \
+      postgres:13
+      
+$ cd simple-backend/
 
 $ ./gradlew clean build
 
 $ docker build . -t simple-backend:v1.0
 
-$ docker network create --driver bridge simple-app-network
-
 $ docker run -d \
     --name simple-backend \
-    --network simple-app-network \
+    --network common-network \
     -e SPRING_PROFILES_ACTIVE=docker \
     simple-backend:v1.0
 
-$ cd ../frontend
+$ cd ../simple-frontend
 
 $ docker build . -t simple-frontend:v1.0
     
 $ docker run -d \
     --name simple-frontend \
-    --network simple-app-network \
+    --network common-network \
     -p 3000:80 \
-    simple-frontend:v1.0 
+    simple-frontend:v1.0
 ```
 
 Открыть в браузере `http://localhost:3000`
