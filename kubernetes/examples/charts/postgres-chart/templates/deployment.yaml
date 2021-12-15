@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Chart.Name }}
+      app.kubernetes.io/version: "{{ .Chart.Version }}"
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Chart.Name }}
+        app.kubernetes.io/version: "{{ .Chart.Version }}"
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ .Values.image.name }}:{{ .Values.image.version }}
+          env:
+            - name: POSTGRES_USER
+              value: {{ .Values.database.default.user }}
+            - name: POSTGRES_PASSWORD
+              value: "{{ .Values.database.default.password }}"
+            - name: POSTGRES_DB
+              value: {{ .Values.database.default.name }}
+          ports:
+            - name: postgres
+              containerPort: {{ .Values.port }}
+          volumeMounts:
+            - name: db-data
+              mountPath: /var/lib/postgresql/data
+            - name: postgres-config-map
+              mountPath: /docker-entrypoint-initdb.d/
+      volumes:
+        - name: db-data
+        - name: postgres-config-map
+          configMap:
+            name: {{ .Chart.Name }}-configmap

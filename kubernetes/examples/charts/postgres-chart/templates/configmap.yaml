@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Chart.Name }}-configmap
+data:
+  create-user-and-db.sql: |
+    CREATE DATABASE {{ .Values.database.main.name }};
+    CREATE ROLE {{ .Values.database.main.user }} WITH PASSWORD '{{ .Values.database.main.password }}';
+    GRANT ALL PRIVILEGES ON DATABASE {{ .Values.database.main.name }} TO {{ .Values.database.main.user }};
+    ALTER ROLE {{ .Values.database.main.user }} WITH LOGIN;

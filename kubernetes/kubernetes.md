@@ -169,125 +169,18 @@ Terraform will perform the following actions:
         }
     }
 
-  # module.nginx-ingress[0].digitalocean_record.base-public[0] will be created
-  + resource "digitalocean_record" "base-public" {
-      + domain = "romanow-alex.ru"
-      + fqdn   = (known after apply)
-      + id     = (known after apply)
-      + name   = "k8s-cluster"
-      + ttl    = 300
-      + type   = "A"
-      + value  = (known after apply)
-    }
-
-  # module.nginx-ingress[0].digitalocean_record.base-public[1] will be created
-  + resource "digitalocean_record" "base-public" {
-      + domain = "romanow-alex.ru"
-      + fqdn   = (known after apply)
-      + id     = (known after apply)
-      + name   = "store"
-      + ttl    = 300
-      + type   = "A"
-      + value  = (known after apply)
-    }
-
-  # module.nginx-ingress[0].digitalocean_record.base-public[2] will be created
-  + resource "digitalocean_record" "base-public" {
-      + domain = "romanow-alex.ru"
-      + fqdn   = (known after apply)
-      + id     = (known after apply)
-      + name   = "order"
-      + ttl    = 300
-      + type   = "A"
-      + value  = (known after apply)
-    }
-
-  # module.nginx-ingress[0].digitalocean_record.base-public[3] will be created
-  + resource "digitalocean_record" "base-public" {
-      + domain = "romanow-alex.ru"
-      + fqdn   = (known after apply)
-      + id     = (known after apply)
-      + name   = "warehouse"
-      + ttl    = 300
-      + type   = "A"
-      + value  = (known after apply)
-    }
-
-  # module.nginx-ingress[0].digitalocean_record.base-public[4] will be created
-  + resource "digitalocean_record" "base-public" {
-      + domain = "romanow-alex.ru"
-      + fqdn   = (known after apply)
-      + id     = (known after apply)
-      + name   = "warranty"
-      + ttl    = 300
-      + type   = "A"
-      + value  = (known after apply)
-    }
-
-  # module.nginx-ingress[0].digitalocean_record.base-public[5] will be created
-  + resource "digitalocean_record" "base-public" {
-      + domain = "romanow-alex.ru"
-      + fqdn   = (known after apply)
-      + id     = (known after apply)
-      + name   = "grafana"
-      + ttl    = 300
-      + type   = "A"
-      + value  = (known after apply)
-    }
-
-  # module.nginx-ingress[0].digitalocean_record.base-public[6] will be created
-  + resource "digitalocean_record" "base-public" {
-      + domain = "romanow-alex.ru"
-      + fqdn   = (known after apply)
-      + id     = (known after apply)
-      + name   = "kibana"
-      + ttl    = 300
-      + type   = "A"
-      + value  = (known after apply)
-    }
-
-  # module.nginx-ingress[0].digitalocean_record.base-public[7] will be created
-  + resource "digitalocean_record" "base-public" {
-      + domain = "romanow-alex.ru"
-      + fqdn   = (known after apply)
-      + id     = (known after apply)
-      + name   = "jaeger"
-      + ttl    = 300
-      + type   = "A"
-      + value  = (known after apply)
-    }
-
   # module.nginx-ingress[0].helm_release.ingress will be created
   + resource "helm_release" "ingress" {
       + atomic                     = false
       + chart                      = "nginx-ingress"
       + cleanup_on_fail            = false
       + create_namespace           = true
-      + dependency_update          = false
-      + disable_crd_hooks          = false
-      + disable_openapi_validation = false
-      + disable_webhooks           = false
-      + force_update               = false
       + id                         = (known after apply)
-      + lint                       = false
       + manifest                   = (known after apply)
-      + max_history                = 0
       + metadata                   = (known after apply)
       + name                       = "nginx-stable"
       + namespace                  = "nginx-ingress"
-      + recreate_pods              = false
-      + render_subchart_notes      = true
-      + replace                    = false
       + repository                 = "https://helm.nginx.com/stable"
-      + reset_values               = false
-      + reuse_values               = false
-      + skip_crds                  = false
-      + status                     = "deployed"
-      + timeout                    = 600
-      + verify                     = false
-      + version                    = "0.11.3"
-      + wait                       = true
-      + wait_for_jobs              = false
 
       + set {
           + name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/do-loadbalancer-certificate-id"
@@ -352,6 +245,7 @@ release "nginx-stable" uninstalled
 $ kubectl apply -f loadbalancer.yml 
 service/simple-frontend configured
 
+# для simple-frontend будет создан новый физический LoadBalancer, поэтому в DNS нужно будет поменять ip адрес
 $ kubectl get services 
 NAME              TYPE           CLUSTER-IP       EXTERNAL-IP                       PORT(S)         AGE
 kubernetes        ClusterIP      10.245.0.1       <none>                            443/TCP         27m
@@ -362,6 +256,61 @@ simple-frontend   LoadBalancer   10.245.138.82    simple-frontend.romanow-alex.r
 
 Открыть в браузере `https://simple-frontend.romanow-alex.ru`
 
+### Установка с помощью Helm
+
+```shell
+$ cd examples/helm
+
+# устанавливаем postgres
+$ helm install postgres postgres-chart/
+NAME: postgres
+LAST DEPLOYED: Wed Dec 15 12:33:33 2021
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+
+# обновление postgres
+$ helm upgrade \
+  --set image.version=14 \
+  --description 'Increment version' \
+  postgres postgres-chart/
+  
+Release "postgres" has been upgraded. Happy Helming!
+NAME: postgres
+LAST DEPLOYED: Wed Dec 15 12:57:32 2021
+NAMESPACE: default
+STATUS: deployed
+REVISION: 2
+TEST SUITE: None
+
+# получение истории изменений postgres
+$ helm history postgres
+REVISION	UPDATED                 	STATUS  	CHART         	APP VERSION	DESCRIPTION     
+1       	Wed Dec 15 12:33:33 2021	superseded	postgres-1.0.0	           	Install complete
+2       	Wed Dec 15 12:57:32 2021	deployed  	postgres-1.0.0	           	Increment version
+
+# тестовый запуск services (frontend + backend), без применения изменений на кластере
+$ helm install services services-chart/ --debug --dry-run
+
+# вывод манифестов для отладки шаблонов
+$ helm template services services-chart/ --debug
+
+# деплоим frontend и backend в кластер
+$ helm install services services-chart/
+NAME: services
+LAST DEPLOYED: Wed Dec 15 13:00:01 2021
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+
+# удаление services
+$ helm uninstall services
+release "services" uninstalled
+```
+
 ## Литература
 
+2. [Helm](https://helm.sh/docs/)
 1. [Kompose User Guide](https://kompose.io/user-guide/)

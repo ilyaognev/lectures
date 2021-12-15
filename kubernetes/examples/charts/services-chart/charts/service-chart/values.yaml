@@ -1,0 +1,12 @@
+ingress:
+  enabled: false
+
+port:
+  container:
+  external:
+
+enviroments: {}
+
+image:
+  name:
+  version:
