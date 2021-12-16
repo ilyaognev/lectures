@@ -1,0 +1,40 @@
+plugins {
+    id "org.springframework.boot" version "2.6.1"
+    id "io.spring.dependency-management" version "1.0.11.RELEASE"
+}
+
+ext {
+    lombokVersion = "1.18.2"
+    postgresContainerVersion = "1.14.3"
+}
+
+subprojects { ->
+    apply plugin: "java"
+    apply plugin: "idea"
+    apply plugin: "org.springframework.boot"
+    apply plugin: "io.spring.dependency-management"
+
+    repositories {
+        mavenCentral()
+    }
+
+    idea {
+        module {
+            downloadJavadoc = true
+            downloadSources = true
+        }
+    }
+
+    sourceCompatibility = 1.11
+    targetCompatibility = 1.11
+
+    dependencies {
+        implementation "org.springframework.boot:spring-boot-starter"
+        implementation "org.springframework.boot:spring-boot-starter-logging"
+        implementation "org.springframework.kafka:spring-kafka"
+    }
+
+    bootJar {
+        archiveFileName = "${project.name}.jar"
+    }
+}
